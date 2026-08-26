@@ -54,7 +54,6 @@ module Constants
   BOOTSTRAP_FILEPATH_NOT_FOUND_ERROR = "setContext: [options.bootstrapFile] parameter should be provided when [options.liveConfigUpdateEnabled] is false."
   NO_INTERNET_CONNECTION_ERROR = "Check for network connectivity failed. Re-checking..."
   INVALID_ENTITY_ID = "Invalid entityId passed to"
-  SINGLETON_EXCEPTION = "Initialize object first"
 
   # Default values
   DEFAULT_SEGMENT_ID = "$$null$$"

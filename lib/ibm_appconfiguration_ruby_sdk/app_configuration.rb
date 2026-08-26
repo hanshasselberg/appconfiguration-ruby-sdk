@@ -37,16 +37,6 @@ module IbmAppconfigurationRubySdk
 
     class << self
       ##
-      # Get the current instance without creating a new one
-      # @return [AppConfiguration] The current instance
-      # @raise [RuntimeError] If instance doesn't exist
-      def current_instance
-        raise Constants::SINGLETON_EXCEPTION unless @singleton_created
-
-        instance
-      end
-
-      ##
       # Override the default App Configuration URL
       # This method should be invoked before the SDK initialization
       # NOTE: To be used for development purposes only
@@ -90,11 +80,6 @@ module IbmAppconfigurationRubySdk
     end
 
     def initialize
-      # Mark the singleton as created (tracked ourselves, not via Ruby's
-      # internal @singleton__instance__ ivar) so current_instance can detect
-      # creation without poking Singleton module internals.
-      self.class.instance_variable_set(:@singleton_created, true)
-
       @initialized = false
       @context_initialized = false
       @use_private_endpoint = self.class.configuration.use_private_endpoint
