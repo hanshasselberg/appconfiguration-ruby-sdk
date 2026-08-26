@@ -26,8 +26,10 @@ class SecretProperty
   ##
   # Initialize a new SecretProperty instance
   # @param property_id [String] Property identifier
-  def initialize(property_id)
+  # @param configuration_handler [ConfigurationHandler] Handler used to evaluate this secret property
+  def initialize(property_id, configuration_handler)
     @property_id = property_id
+    @configuration_handler = configuration_handler
   end
 
   ##
@@ -47,8 +49,7 @@ class SecretProperty
       return nil
     end
 
-    require_relative "../configuration_handler"
-    configuration_handler_instance = ConfigurationHandler.current_instance
+    configuration_handler_instance = @configuration_handler
 
     # Get the property object
     property_obj = configuration_handler_instance.get_property(@property_id)

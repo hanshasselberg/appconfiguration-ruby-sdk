@@ -17,7 +17,7 @@
 require "spec_helper"
 
 RSpec.describe IbmAppconfigurationRubySdk::ConfigurationHandler do
-  subject(:handler) { described_class.instance }
+  subject(:handler) { described_class.new }
 
   # A timestamp comfortably in the past so progressive phases are active.
   past_start = "2020-01-01T00:00:00Z"
