@@ -196,7 +196,7 @@ class ConfigurationHandler
     @bootstrap_file = options[:bootstrap_file]
     @live_update = options[:live_config_update_enabled]
 
-    # EvaluationEvents and MetricEvents are not yet ported from Node SDK.
+    # EvaluationEvents and MetricEvents are not yet implemented in this SDK.
 
     persistent_cache_read = false
     error_reading_bootstrap_config = false
@@ -361,7 +361,8 @@ class ConfigurationHandler
   end
 
   def track(_event_key, _entity_id)
-    raise NotImplementedError, "track is not yet implemented — requires MetricEvents port from Node SDK"
+    # Custom metric events are not yet implemented in this SDK.
+    @logger.warning("track is not supported yet — custom metric events are not implemented")
   end
 
   ##
