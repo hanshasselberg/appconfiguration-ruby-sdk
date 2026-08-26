@@ -26,13 +26,16 @@ class Property
   ##
   # Initialize a new Property instance
   # @param property [Hash] properties hash that contains all the properties
-  def initialize(property)
+  # @param configuration_handler [ConfigurationHandler] Handler used to evaluate this property
+  def initialize(property, configuration_handler)
     @name = property[:name]
     @property_id = property[:property_id]
     @type = property[:type]
     @format = property[:format] # will be nil for boolean & numeric datatypes
     @value = property[:value]
     @segment_rules = property[:segment_rules]
+
+    @configuration_handler = configuration_handler
   end
 
   ##
@@ -83,9 +86,7 @@ class Property
       return nil
     end
 
-    require_relative "../configuration_handler"
-    configuration_handler_instance = ConfigurationHandler.current_instance
-    configuration_handler_instance.property_evaluation(self, entity_id, entity_attributes)
+    @configuration_handler.property_evaluation(self, entity_id, entity_attributes)
   end
 end
 end

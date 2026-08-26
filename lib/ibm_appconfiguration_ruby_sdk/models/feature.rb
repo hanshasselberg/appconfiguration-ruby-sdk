@@ -25,7 +25,8 @@ class Feature
               :segment_rules, :experiment
 
   # @param feature [Hash] Feature configuration hash
-  def initialize(feature)
+  # @param configuration_handler [ConfigurationHandler] Handler used to evaluate this feature
+  def initialize(feature, configuration_handler)
     @name = feature[:name]
     @feature_id = feature[:feature_id]
     @type = feature[:type]
@@ -43,6 +44,8 @@ class Feature
 
     @segment_rules = feature[:segment_rules]
     @experiment = feature[:experiment]
+
+    @configuration_handler = configuration_handler
   end
 
   # @return [String, nil] Feature data format (TEXT/JSON/YAML)
@@ -97,9 +100,7 @@ class Feature
       return nil
     end
 
-    require_relative "../configuration_handler"
-    configuration_handler_instance = ConfigurationHandler.current_instance
-    configuration_handler_instance.feature_evaluation(self, entity_id, entity_attributes)
+    @configuration_handler.feature_evaluation(self, entity_id, entity_attributes)
   end
 end
 end

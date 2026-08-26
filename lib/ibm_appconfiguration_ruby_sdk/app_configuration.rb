@@ -41,7 +41,7 @@ module IbmAppconfigurationRubySdk
       # @return [AppConfiguration] The current instance
       # @raise [RuntimeError] If instance doesn't exist
       def current_instance
-        raise Constants::SINGLETON_EXCEPTION unless @singleton__instance__
+        raise Constants::SINGLETON_EXCEPTION unless @singleton_created
 
         instance
       end
@@ -90,6 +90,11 @@ module IbmAppconfigurationRubySdk
     end
 
     def initialize
+      # Mark the singleton as created (tracked ourselves, not via Ruby's
+      # internal @singleton__instance__ ivar) so current_instance can detect
+      # creation without poking Singleton module internals.
+      self.class.instance_variable_set(:@singleton_created, true)
+
       @initialized = false
       @context_initialized = false
       @use_private_endpoint = self.class.configuration.use_private_endpoint
@@ -113,7 +118,7 @@ module IbmAppconfigurationRubySdk
       report_error(Constants::GUID_ERROR)    unless guid
       report_error(Constants::APIKEY_ERROR)  unless apikey
 
-      @configuration_handler = ConfigurationHandler.instance
+      @configuration_handler = ConfigurationHandler.new
       @configuration_handler.init(region: region, guid: guid, apikey: apikey,
                                    use_private_endpoint: @use_private_endpoint)
       @initialized = true
@@ -178,7 +183,6 @@ module IbmAppconfigurationRubySdk
       end
 
       @context_initialized = true
-      @configuration_handler = ConfigurationHandler.instance
       @configuration_handler.set_context(collection_id, environment_id, **default_options)
     end
 
@@ -295,7 +299,7 @@ module IbmAppconfigurationRubySdk
       end
       # Listener can be registered after init but before set_context —
       # store it on the handler so it fires on the very first config fetch.
-      @configuration_handler = ConfigurationHandler.instance unless @configuration_handler
+      @configuration_handler ||= ConfigurationHandler.new
       @configuration_handler.register_configuration_update_listener(&block)
     end
 

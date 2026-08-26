@@ -17,7 +17,9 @@
 require "spec_helper"
 
 RSpec.describe IbmAppconfigurationRubySdk::SecretProperty do
-  subject(:secret_property) { described_class.new("my-secret-prop") }
+  let(:handler_double) { instance_double(IbmAppconfigurationRubySdk::ConfigurationHandler) }
+
+  subject(:secret_property) { described_class.new("my-secret-prop", handler_double) }
 
   it "exposes property_id" do
     expect(secret_property.property_id).to eq("my-secret-prop")
@@ -35,11 +37,6 @@ RSpec.describe IbmAppconfigurationRubySdk::SecretProperty do
 
     context "with a valid entity_id" do
       let(:handler_double) { instance_double(IbmAppconfigurationRubySdk::ConfigurationHandler) }
-
-      before do
-        allow(IbmAppconfigurationRubySdk::ConfigurationHandler)
-          .to receive(:instance).and_return(handler_double)
-      end
 
       it "returns nil when the property is not found in the handler" do
         allow(handler_double).to receive(:get_property).with("my-secret-prop").and_return(nil)

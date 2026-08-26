@@ -17,6 +17,8 @@
 require "spec_helper"
 
 RSpec.describe IbmAppconfigurationRubySdk::Feature do
+  let(:handler_double) { instance_double(IbmAppconfigurationRubySdk::ConfigurationHandler) }
+
   let(:feature_hash) do
     {
       name: "Cycle Rentals",
@@ -30,7 +32,7 @@ RSpec.describe IbmAppconfigurationRubySdk::Feature do
     }
   end
 
-  subject(:feature) { described_class.new(feature_hash) }
+  subject(:feature) { described_class.new(feature_hash, handler_double) }
 
   it "exposes the basic getters" do
     expect(feature.name).to eq("Cycle Rentals")
@@ -45,12 +47,12 @@ RSpec.describe IbmAppconfigurationRubySdk::Feature do
   end
 
   it "defaults rollout_percentage to 100 when not provided" do
-    f = described_class.new(feature_hash.reject { |k, _| k == :rollout_percentage })
+    f = described_class.new(feature_hash.reject { |k, _| k == :rollout_percentage }, handler_double)
     expect(f.rollout_percentage).to eq(100)
   end
 
   it "defaults the data format to TEXT for STRING features" do
-    f = described_class.new(feature_hash.merge(type: "STRING", format: nil))
+    f = described_class.new(feature_hash.merge(type: "STRING", format: nil), handler_double)
     expect(f.data_format).to eq("TEXT")
   end
 
@@ -65,7 +67,7 @@ RSpec.describe IbmAppconfigurationRubySdk::Feature do
       ).reject { |k, _| k == :rollout_percentage }
     end
 
-    subject(:feature) { described_class.new(progressive_hash) }
+    subject(:feature) { described_class.new(progressive_hash, handler_double) }
 
     it "stores the rollout configuration and leaves rollout_percentage nil" do
       expect(feature.rollout_configuration).not_to be_nil
@@ -91,7 +93,6 @@ RSpec.describe IbmAppconfigurationRubySdk::Feature do
       end
 
       before do
-        allow(IbmAppconfigurationRubySdk::ConfigurationHandler).to receive(:instance).and_return(handler_double)
         allow(handler_double).to receive(:feature_evaluation).and_return(eval_result)
       end
 

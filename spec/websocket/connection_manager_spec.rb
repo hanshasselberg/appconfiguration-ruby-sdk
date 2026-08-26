@@ -244,7 +244,8 @@ module WsTestHelpers
       guid: "test-guid",
       apikey: "test-apikey",
       collection_id: "col",
-      environment_id: "env"
+      environment_id: "env",
+      handler: IbmAppconfigurationRubySdk::ConfigurationHandler.new
     )
     # setup_sdk inside ConnectionManager.new calls set_websocket_url which
     # overwrites @websocket_full_url.  Re-apply our mock-server URL here.
@@ -281,7 +282,8 @@ RSpec.describe IbmAppconfigurationRubySdk::WebSocketClient do
       guid: "test-guid",
       apikey: "test-apikey",
       collection_id: "col",
-      environment_id: "env"
+      environment_id: "env",
+      handler: IbmAppconfigurationRubySdk::ConfigurationHandler.new
     )
     # Re-apply mock-server URL after setup_sdk has overwritten it.
     IbmAppconfigurationRubySdk::UrlBuilder.instance.instance_variable_set(

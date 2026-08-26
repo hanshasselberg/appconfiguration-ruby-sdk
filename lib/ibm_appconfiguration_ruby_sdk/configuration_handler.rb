@@ -14,7 +14,6 @@
 
 # frozen_string_literal: true
 
-require "singleton"
 require "json"
 require_relative "models/feature"
 require_relative "models/property"
@@ -35,18 +34,7 @@ require_relative "metering"
 # Internal client to handle the configuration
 module IbmAppconfigurationRubySdk
 class ConfigurationHandler
-  include Singleton
   include IbmAppconfigurationRubySdk::Utils
-
-  # Returns the existing singleton without creating a new one.
-  # Raises ConfigurationError if called before the handler has been initialised —
-  # matching Node SDK's configurationHandler.currentInstance() behaviour.
-  def self.current_instance
-    raise IbmAppconfigurationRubySdk::ConfigurationError, Constants::SINGLETON_EXCEPTION \
-      unless @singleton__instance__
-
-    instance
-  end
 
   def initialize
     @collection_id = nil
@@ -121,7 +109,7 @@ class ConfigurationHandler
         @rollout_config_map = {}
 
         features.each do |feature|
-          feature_obj = Feature.new(feature)
+          feature_obj = Feature.new(feature, self)
           @feature_map[feature[:feature_id]] = feature_obj
 
           # Parse feature-level progressive rollout
@@ -147,7 +135,7 @@ class ConfigurationHandler
         properties = data[:properties]
         @property_map = {}
         properties.each do |property|
-          @property_map[property[:property_id]] = Property.new(property)
+          @property_map[property[:property_id]] = Property.new(property, self)
         end
       end
 
@@ -361,7 +349,8 @@ class ConfigurationHandler
         apikey: url_builder.apikey,
         collection_id: @collection_id,
         environment_id: @environment_id,
-        start_background_retry: start_background_retry
+        start_background_retry: start_background_retry,
+        handler: self
       )
 
       @websocket_client.connect
@@ -409,7 +398,7 @@ class ConfigurationHandler
     if property_obj
       if property_obj.type == Constants::SECRETREF
         @secret_map[property_id] = secrets_manager_service
-        return SecretProperty.new(property_id)
+        return SecretProperty.new(property_id, self)
       end
       @logger.error("Invalid operation: getSecret() cannot be called on a #{property_obj.type} property.")
       return nil

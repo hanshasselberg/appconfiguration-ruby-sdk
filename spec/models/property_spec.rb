@@ -17,6 +17,8 @@
 require "spec_helper"
 
 RSpec.describe IbmAppconfigurationRubySdk::Property do
+  let(:handler_double) { instance_double(IbmAppconfigurationRubySdk::ConfigurationHandler) }
+
   let(:property_hash) do
     {
       name: "Show Ad",
@@ -27,7 +29,7 @@ RSpec.describe IbmAppconfigurationRubySdk::Property do
     }
   end
 
-  subject(:property) { described_class.new(property_hash) }
+  subject(:property) { described_class.new(property_hash, handler_double) }
 
   it "exposes the basic getters" do
     expect(property.name).to eq("Show Ad")
@@ -37,7 +39,7 @@ RSpec.describe IbmAppconfigurationRubySdk::Property do
   end
 
   it "defaults the data format to TEXT for STRING properties" do
-    p = described_class.new(property_hash.merge(type: "STRING", format: nil))
+    p = described_class.new(property_hash.merge(type: "STRING", format: nil), handler_double)
     expect(p.data_format).to eq("TEXT")
   end
 
@@ -58,7 +60,6 @@ RSpec.describe IbmAppconfigurationRubySdk::Property do
       end
 
       before do
-        allow(IbmAppconfigurationRubySdk::ConfigurationHandler).to receive(:instance).and_return(handler_double)
         allow(handler_double).to receive(:property_evaluation).and_return(eval_result)
       end
 

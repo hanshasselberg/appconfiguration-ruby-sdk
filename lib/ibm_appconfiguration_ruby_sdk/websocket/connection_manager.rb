@@ -26,7 +26,6 @@ require_relative "../api_manager"
 require_relative "../url_builder"
 require_relative "../config_fetcher"
 require_relative "../background_retry_manager"
-require_relative "../configuration_handler"
 require_relative "../utils"
 require_relative "../logger"
 require_relative "../version"
@@ -35,13 +34,14 @@ module IbmAppconfigurationRubySdk
 class ConnectionManager
   attr_reader :last_heartbeat_at
 
-  def initialize(region:, guid:, apikey:, collection_id:, environment_id:, start_background_retry: false)
+  def initialize(region:, guid:, apikey:, collection_id:, environment_id:, start_background_retry: false, handler:)
     @region = region
     @guid = guid
     @apikey = apikey
     @collection_id = collection_id
     @environment_id = environment_id
     @start_background_retry = start_background_retry
+    @handler = handler
 
     @state = IbmAppconfigurationRubySdk::State::DISCONNECTED
 
@@ -454,14 +454,14 @@ class ConnectionManager
     @config_fetcher = IbmAppconfigurationRubySdk::ConfigFetcher.new(
       collection_id: @collection_id,
       environment_id: @environment_id,
-      handler: IbmAppconfigurationRubySdk::ConfigurationHandler.instance
+      handler: @handler
     )
 
     # Initialize BackgroundRetryManager
     @background_retry_manager = IbmAppconfigurationRubySdk::BackgroundRetryManager.new(
       collection_id: @collection_id,
       environment_id: @environment_id,
-      handler: IbmAppconfigurationRubySdk::ConfigurationHandler.instance
+      handler: @handler
     )
   end
 end
