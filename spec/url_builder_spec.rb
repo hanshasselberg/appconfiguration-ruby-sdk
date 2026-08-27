@@ -25,7 +25,7 @@ RSpec.describe IbmAppconfigurationRubySdk::UrlBuilder do
     builder.guid   = "test-guid"
     builder.apikey = "test-apikey-1234"
     builder.use_private_endpoint = false
-    builder.base_service_url = nil   # clear any override
+    builder.base_service_url = nil # clear any override
   end
 
   # ──────────────────────────────────────────────────────────
@@ -164,16 +164,6 @@ RSpec.describe IbmAppconfigurationRubySdk::UrlBuilder do
     it "returns the value set via the writer" do
       builder.guid = "my-guid"
       expect(builder.guid).to eq("my-guid")
-    end
-  end
-
-  # ──────────────────────────────────────────────────────────
-  # set_base_service_url alias
-  # ──────────────────────────────────────────────────────────
-  describe "#set_base_service_url" do
-    it "is an alias for base_service_url=" do
-      builder.set_base_service_url("https://alias.example.com")
-      expect(builder.base_service_url).to eq("https://alias.example.com")
     end
   end
 end

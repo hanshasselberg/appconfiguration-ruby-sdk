@@ -186,7 +186,7 @@ end
 ## Get all features
 
 ```ruby
-features = client.get_features
+features = client.features
 feature = features["online-check-in"]
 
 if feature
@@ -238,7 +238,7 @@ end
 ## Get all properties
 
 ```ruby
-properties = client.get_properties
+properties = client.properties
 property = properties["check-in-charges"]
 
 if property
