@@ -30,10 +30,10 @@ RSpec.describe IbmAppconfigurationRubySdk::SegmentRules do
   subject(:segment_rule) { described_class.new(segment_rule_hash) }
 
   it "exposes the basic getters" do
-    expect(segment_rule.get_rules).to eq([{ segments: ["seg1"] }])
-    expect(segment_rule.get_value).to eq("$default")
-    expect(segment_rule.get_order).to eq(1)
-    expect(segment_rule.get_rollout_percentage).to eq(50)
+    expect(segment_rule.rules).to eq([{ segments: ["seg1"] }])
+    expect(segment_rule.value).to eq("$default")
+    expect(segment_rule.order).to eq(1)
+    expect(segment_rule.rollout_percentage).to eq(50)
     expect(segment_rule.rule_id).to eq("rule-1")
   end
 
@@ -43,7 +43,7 @@ RSpec.describe IbmAppconfigurationRubySdk::SegmentRules do
 
   it "defaults rollout_percentage to 100 when not provided" do
     sr = described_class.new(segment_rule_hash.reject { |k, _| k == :rollout_percentage })
-    expect(sr.get_rollout_percentage).to eq(100)
+    expect(sr.rollout_percentage).to eq(100)
   end
 
   context "with a progressive rollout configuration" do
