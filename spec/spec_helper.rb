@@ -28,7 +28,18 @@ RSpec.configure do |config|
   end
 
   # Keep the SDK logger quiet during the test run.
+  real_log = nil
+
   config.before(:suite) do
-    IbmAppconfigurationRubySdk::Logger.instance.debug = false
+    logger = IbmAppconfigurationRubySdk::Logger.instance
+    logger.debug = false
+    real_log = logger.instance_variable_get(:@log)
+    # Redirect the underlying ::Logger to /dev/null so error/info messages
+    # (which are always emitted) don't pollute the spec output.
+    logger.instance_variable_set(:@log, ::Logger.new(File::NULL))
+  end
+
+  config.after(:suite) do
+    IbmAppconfigurationRubySdk::Logger.instance.instance_variable_set(:@log, real_log)
   end
 end
