@@ -44,7 +44,9 @@ module IbmAppconfigurationRubySdk
 
     # @return [Boolean, String, Numeric] Rule value
     def value
-      @value || ""
+      # Use a nil check so a legitimate `false` rule value is returned as false
+      # instead of being swallowed by Ruby's truthiness (`false || ""` => "").
+      @value.nil? ? "" : @value
     end
   end
 end
